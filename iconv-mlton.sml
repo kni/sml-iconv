@@ -4,7 +4,7 @@ struct
   val () = MLton.Exn.addExnMessager (fn Iconv m => SOME ("Iconv \"" ^ m ^ "\"") | _ => NONE)
   local
 
-    type long = m4_ifelse(LONG_BIT, 32, Int32.int, Int64.int)
+    type long = C_Long.t
 
     val iconv_open_ffi  = _import "iconv_open"  : string * string -> long;
     val iconv_ffi       = _import "iconv"       : long * string ref * int ref * Word8Array.array ref * int ref -> long;
