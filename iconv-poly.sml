@@ -4,13 +4,17 @@ struct
   local
     open Foreign
 
-    val libc = m4_ifelse(OS, FreeBSD, loadLibrary "libiconv.so", loadExecutable ())
+    val libc = loadExecutable ()
 
-    m4_define(m4_LIB, `m4_ifelse(OS, FreeBSD, lib, )')
+    (* if iconv is missing in libc then libiconv used *)
+    val (libc, symbolPrefix) = ( symbolAsAddress (getSymbol libc "iconv"); (libc, "") )
+       handle exc => case exc of
+           (Foreign _) => (loadLibrary "libiconv.so", "lib")
+         | _ => raise exc
     
-    val iconv_open_ffi  = buildCall2 ((getSymbol libc "m4_LIB`'iconv_open"), (cString, cString), cLong)
-    val iconv_ffi       = buildCall5 ((getSymbol libc "m4_LIB`'iconv"), (cLong, cStar cPointer, cStar cInt, cStar cPointer, cStar cInt), cLong)
-    val iconv_close_ffi = buildCall1 ((getSymbol libc "m4_LIB`'iconv_close"), cLong, cInt)
+    val iconv_open_ffi  = buildCall2 ((getSymbol libc (symbolPrefix ^ "iconv_open")), (cString, cString), cLong)
+    val iconv_ffi       = buildCall5 ((getSymbol libc (symbolPrefix ^ "iconv")), (cLong, cStar cPointer, cStar cInt, cStar cPointer, cStar cInt), cLong)
+    val iconv_close_ffi = buildCall1 ((getSymbol libc (symbolPrefix ^ "iconv_close")), cLong, cInt)
 
 
  in

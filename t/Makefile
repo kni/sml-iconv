@@ -1,10 +1,7 @@
 all:
 	@echo targets: poly mlton clean
 
-../iconv-poly.sml: ../iconv-poly.sml.in
-	@cd .. && make
-
-iconv-poly: ../iconv-poly.sml.in ../iconv-poly.sml t.sml t.mlp
+iconv-poly: ../iconv-poly.sml t.sml t.mlp
 	polyc -o iconv-poly t.mlp
 
 iconv-mlton: ../iconv-mlton.sml t.sml main.sml t.mlb

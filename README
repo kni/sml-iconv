@@ -1,1 +1,3 @@
-Standard ML (MLton and Poly/ML) bindings for iconv
+Standard ML (MLton and Poly/ML) bindings for iconv.
+
+See t directory for example.
