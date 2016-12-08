@@ -1,4 +1,9 @@
-structure Iconv =
+structure Iconv :
+sig
+  exception Iconv of string
+  val iconv: string -> string -> string -> string
+end
+=
 struct
   exception Iconv of string
   local

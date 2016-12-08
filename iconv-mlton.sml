@@ -1,4 +1,9 @@
-structure Iconv =
+structure Iconv :
+sig
+  exception Iconv of string
+  val iconv: string -> string -> string -> string
+end
+=
 struct
   exception Iconv of string
   val () = MLton.Exn.addExnMessager (fn Iconv m => SOME ("Iconv \"" ^ m ^ "\"") | _ => NONE)
