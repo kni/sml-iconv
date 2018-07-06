@@ -26,7 +26,8 @@ struct
             val srcsize = String.size s
             val dstsize = srcsize * 2
 
-            val dstmem = Word8Array.arrayUninit (dstsize)
+            (* val dstmem = Word8Array.unsafeAlloc dstsize *) (* MLton 20180207 *)
+            val dstmem = Unsafe.Word8Array.create dstsize (* MLton 20130715 and 20180207 *)
 
             val src     = ref s
             val srcleft = ref srcsize
