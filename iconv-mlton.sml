@@ -18,7 +18,7 @@ struct
  in
     fun iconv from to s =
       let
-        val cd = iconv_open_ffi (to, from)
+        val cd = iconv_open_ffi (to ^ "\000", from ^ "\000")
       in
         if cd = ~1 then raise Iconv "open" else
           let
