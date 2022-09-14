@@ -16,9 +16,9 @@ struct
        handle exc => case exc of
            (Foreign _) => (loadLibrary "libiconv.so", "lib")
          | _ => raise exc
-    
+
     val iconv_open_ffi  = buildCall2 ((getSymbol libc (symbolPrefix ^ "iconv_open")), (cString, cString), cLong)
-    val iconv_ffi       = buildCall5 ((getSymbol libc (symbolPrefix ^ "iconv")), (cLong, cStar cPointer, cStar cInt, cStar cPointer, cStar cInt), cLong)
+    val iconv_ffi       = buildCall5 ((getSymbol libc (symbolPrefix ^ "iconv")), (cLong, cStar cPointer, cStar cLong, cStar cPointer, cStar cLong), cLong)
     val iconv_close_ffi = buildCall1 ((getSymbol libc (symbolPrefix ^ "iconv_close")), cLong, cInt)
 
 

@@ -12,7 +12,7 @@ struct
     type long = C_Long.t
 
     val iconv_open_ffi  = _import "iconv_open"  : string * string -> long;
-    val iconv_ffi       = _import "iconv"       : long * string ref * int ref * Word8Array.array ref * int ref -> long;
+    val iconv_ffi       = _import "iconv"       : long * string ref * long ref * Word8Array.array ref * long ref -> long;
     val iconv_close_ffi = _import "iconv_close" : long -> unit;
 
  in
@@ -30,9 +30,9 @@ struct
             val dstmem = Unsafe.Word8Array.create dstsize (* MLton 20130715 and 20180207 *)
 
             val src     = ref s
-            val srcleft = ref srcsize
+            val srcleft = ref (C_Long.fromInt srcsize)
             val dst     = ref dstmem
-            val dstleft = ref dstsize
+            val dstleft = ref (C_Long.fromInt dstsize)
 
             val r = iconv_ffi (cd, src, srcleft, dst, dstleft)
             val _ = iconv_close_ffi cd
@@ -41,12 +41,12 @@ struct
             if r = ~1
             then
               (
-                if !dstleft < maxSymbolSize
+                if C_Long.toInt (!dstleft) < maxSymbolSize
                 then raise Iconv "convert: maybe small buffer"
                 else raise Iconv "convert"
               )
             else
-              Byte.bytesToString (Word8ArraySlice.vector (Word8ArraySlice.slice (dstmem, 0, SOME (dstsize - (!dstleft)))))
+              Byte.bytesToString (Word8ArraySlice.vector (Word8ArraySlice.slice (dstmem, 0, SOME (dstsize - C_Long.toInt (!dstleft)))))
           end
 
       end
